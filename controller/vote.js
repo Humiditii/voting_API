@@ -29,14 +29,35 @@ export class AuthVoter {
         }
 
         PinModel.findOne({voter_pin: VoterDetails.pin}).then( result => {
-            if( result.voter_name === VoterDetails.name){
+            if(!result){
+                return res.status(404).json({
+                    message: 'Pin supplied not found, please input the correct pin or contact your provider'
+                })
+            }else{
+                if( result.voter_name === VoterDetails.name){
 
+                }else {
+                    return res.status(401).json({
+                        message: 'Name supplied does not match the Pin provided'
+                    });
+                }
             }
+
         }).catch( err => {
             if(!err.statusCode){
                 err.statusCode = 500;
             }
             next(err);
         })
+    }
+}
+
+export class StartVote {
+    constructor(){
+        this.vote;
+    }
+
+    vote(req, res, next){
+
     }
 }
