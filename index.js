@@ -49,7 +49,7 @@ mongoose.connect(MONGO_URI, {
     useNewUrlParser: true
 }).then(connection => {
 app.listen(port, () => {
-    console.log('Server running at    ' + port);
+    console.log('Server running at ' + port);
 });
 }).catch(err => {
     throw err; 
