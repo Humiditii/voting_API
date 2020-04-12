@@ -29,4 +29,3 @@ const authModel = new Schema({
 export const AuthModel = mongoose.model('auth', authModel);
 
 
-

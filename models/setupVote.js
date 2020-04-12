@@ -17,9 +17,9 @@ const setupVoteMOdel = new Schema({
                     required: true
                 }, 
                 options: {
-                    type: String,        
+                    type: Array,        
                     required: true
-                } 
+                }
             } 
         ]
 });
