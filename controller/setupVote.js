@@ -25,12 +25,25 @@ export class PostVoteSetup {
     }
 
    async postVote(req, res, next){
-        const VoteSetObject = {
+        let VoteSetObject = {
             position: req.body.position,
             options: req. body.options
         }
-    
 
+        
+    if( typeof VoteSetObject.options == 'string' ){
+        const Candidates = VoteSetObject.options.split(' ');
+        const voteCounts = [];
+        for (let index = 0; index < Candidates.length; index++) {
+            voteCounts.push(0)
+            
+        }
+        VoteSetObject.options =[ [...Candidates],
+                                 [ ...voteCounts]]
+        
+    }
+
+    console.log(VoteSetObject.options)
     const newSetup = new SetupModel();
     newSetup.adminId = req.userId;
 
@@ -38,6 +51,9 @@ export class PostVoteSetup {
         position: VoteSetObject.position,
         options: VoteSetObject.options
     }
+
+    
+
 
     /** The Getdocumet const receives an object from an async
      * function and return null to the constant if the promise
@@ -195,7 +211,46 @@ export class GetGeneratedPin{
                 err.statusCode = 500;
             }
             next(err)
+        });
+    }
+}
+
+export class ViewVote {
+    constructor(){
+        this.view;
+    }
+    view( req, res, next){
+        const reqAdminId = req.userId;
+        SetupModel.findOne({adminId:reqAdminId}).then( setupVotesDocuments => {
+           return res.status(200).json({
+                data: setupVotesDocuments.optionPost
+            })
+        }).catch( err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
         })
+
+    }
+}
+
+export class EditVoteModel {
+    constructor(){
+        this.editVote;
+    }
+
+    editVote( req, res, next){
+        const reqAdminId = req.userId;
+        SetupModel.findOne({adminId: reqAdminId}).then( result =>{
+            
+        }).catch( err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        })
+
     }
 }
 

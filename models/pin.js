@@ -10,7 +10,7 @@ const pinModel = new Schema({
     },
     voter_name: {
         type: String,
-        required: true
+        required: true  
     },
     voter_pin: {
         type: String,

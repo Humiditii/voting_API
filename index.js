@@ -3,8 +3,9 @@ const app = express();
 
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose'
-import authRouter from './routes/auth';
-import setupVoteRouter from './routes/setupVoteRoutes';
+import authRoutes from './routes/auth';
+import setupVoteRoutes from './routes/setupVoteRoutes';
+import voteRoutes from './routes/vote';
 
 
 app.use(bodyParser.urlencoded({
@@ -25,8 +26,9 @@ app.use((req, res, next) => {
 
 //Application routes
 
-app.use('/api', authRouter);
-app.use('/api', setupVoteRouter);
+app.use('/api', authRoutes);
+app.use('/api', setupVoteRoutes);
+app.use('/api', voteRoutes);
 
 //Application Routes ends
 
