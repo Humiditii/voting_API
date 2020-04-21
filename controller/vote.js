@@ -167,8 +167,10 @@ export class Result {
         const adminId = req.userId;
         SetupModel.findOne({adminId: adminId}).then( documents => {
             res.status(200).json({
-                position: documents.optionPost[0].position,
-                data:documents.optionPost[0].options,
+                data:{
+                    position: documents.optionPost[0].position,
+                    options:documents.optionPost[0].options,
+                },
                 statusCode: 200
             });
         }).catch( err => {
