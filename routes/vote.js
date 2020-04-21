@@ -1,6 +1,6 @@
 import express from 'express';
 import {IsAuth} from '../middleware/isAuth'
-import {AuthVoter, GetVote, StartVote} from '../controller/vote';
+import {AuthVoter, GetVote, StartVote, SubmiVote, Result} from '../controller/vote';
 
 const router = express.Router();
 
@@ -12,6 +12,10 @@ router.post('/vote', new AuthVoter().loginVoter);
 
 //GET request to /api/vote_granted to view the voting page for authorized voter only
 router.get('/vote_granted', new IsAuth().VoteAuth ,new StartVote().vote );
+
+router.post('/submit_vote', new IsAuth().VoteAuth, new SubmiVote().postVote )
+
+router.get('/result', new IsAuth().verifyAuth, Result.Getresult )
 
 export default router;
 
