@@ -21,7 +21,7 @@ const authModel = new Schema({
     },
     role: {
         type: String,
-        required: true
+        default: 'Admin'
     }
 });
 

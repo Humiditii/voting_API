@@ -121,7 +121,7 @@ export class Signin {
                                 Message: findUserWithUsername.username +" "+ "logged in",
                                 token: token,
                                 userId: findUserWithUsername._id.toString(),
-                                userRole: findUserWithUsername.role
+                                //userRole: findUserWithUsername.role
                             }
                         );
                     }
