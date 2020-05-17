@@ -26,9 +26,9 @@ app.use((req, res, next) => {
 
 //Application routes
 
-app.use('/api', authRoutes);
-app.use('/api', setupVoteRoutes);
-app.use('/api', voteRoutes);
+app.use('/api/v1', authRoutes);
+app.use('/api/v1', setupVoteRoutes);
+app.use('/api/v1', voteRoutes);
 
 //Application Routes ends
 
@@ -45,7 +45,7 @@ app.use((error, req, res, next) => {
 });
 
 
-const port = 3000;
+const port = 3300;
 const MONGO_URI = 'mongodb://localhost:27017/vote_api';
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
