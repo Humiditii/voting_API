@@ -11,7 +11,10 @@ const setupVoteMOdel = new Schema({
     },
     
     optionPost: [
-            { 
+            {   vote_name:{
+                type: String,
+                required: true
+            } ,
                 position: {
                     type: String, 
                     required: true

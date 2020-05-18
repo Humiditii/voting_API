@@ -29,7 +29,8 @@ export class PostVoteSetup {
    async postVote(req, res, next){
         let VoteSetObject = {
             position: req.body.position,
-            options: req. body.options
+            options: req. body.options,
+            votename: req.body.votename
         }
 
         
@@ -51,7 +52,8 @@ export class PostVoteSetup {
 
     const newPost = {
         position: VoteSetObject.position,
-        options: VoteSetObject.options
+        options: VoteSetObject.options,
+        vote_name: VoteSetObject.votename
     }
 
     
