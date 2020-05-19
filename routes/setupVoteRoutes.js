@@ -1,6 +1,6 @@
 import express from 'express';
 import {IsAuth} from '../middleware/isAuth';
-import { GetSetupVote, PostVoteSetup , postPinGeneration, GetGeneratedPin, ViewVote} from '../controller/setupVote';
+import { GetSetupVote, PostVoteSetup , postPinGeneration, GetGeneratedPin, ViewVote, EditVoteModel} from '../controller/setupVote';
 
 const auth = new IsAuth();
 
@@ -32,6 +32,8 @@ router.get('/getpins', auth.verifyAuth, new GetGeneratedPin().getpins);
  * <<< for authenticated user only
  */
 router.get('/viewSetups', auth.verifyAuth, new ViewVote().view );
+
+router.post('/edit', auth.verifyAuth, new EditVoteModel().editVote )
 
 export default router;
 

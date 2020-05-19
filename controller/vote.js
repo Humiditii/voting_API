@@ -2,6 +2,7 @@ import PinModel from '../models/pin';
 import SetupModel from '../models/setupVote';
 import jwt from 'jsonwebtoken';
 
+
 export class GetVote {
     constructor(){
         this.getvote;
@@ -49,7 +50,6 @@ export class AuthVoter {
                                 message: procedDocument.voter_name + ' logged in to the voting platform successfully',
                                 token: token
                             });
-
                     }).catch( err => {
                         if(!err.statusCode){
                             err.statusCode = 500;
@@ -62,7 +62,6 @@ export class AuthVoter {
                     });
                 }
             }
-
         }).catch( err => {
             if(!err.statusCode){
                 err.statusCode = 500;
@@ -107,7 +106,7 @@ export class StartVote {
     }
 }
 
-/**
+/**i
  * THis class takes the voter result and update in the database 
  */
 export class SubmiVote {
@@ -117,5 +116,68 @@ export class SubmiVote {
 
     postVote( req, res, next ){
         const voterId = req.voter_pin_id;
+        const voter_option_req = Number(req.body.voter_opt);
+
+        PinModel.findById(voterId).then( voterDocument => {
+
+            SetupModel.findOne({adminId: voterDocument.adminId}).then( adminDocument => {
+                // adminDocument.update({$inc: {"adminDocument.optionPost[0].options[1][voter_option_req]": 1 }}).then( result => {
+                //     res.json({
+                //         data: result
+                //     })
+                // }).catch(err => {
+                //     if(!err.statusCode){
+                //         err.statusCode = 500;
+                //     }
+                //     next(err);
+                // })
+                //console.log( adminDocument.optionPost[0].options[1][voter_option_req] )
+                //console.log(adminDocument.optionPost[0].options[1][voter_option_req] += 1);
+
+                adminDocument.optionPost[0].options[1][voter_option_req] += 1
+                adminDocument.save().then( voteSubmitted => {
+                    console.log(adminDocument.optionPost[0].options[1][voter_option_req] += 1)
+                    return res.status(201).json({
+                        data: voteSubmitted
+                    });
+                }).catch( err => {
+                    if(!err.statusCode){
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                })
+            }).catch( err => {
+                if(!err.statusCode){
+                    err.statusCode = 500;
+                }
+                next(err);
+            })
+        }).catch( err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        })
+        
+    }
+}
+
+export class Result {   
+    static Getresult(req, res, next){
+        const adminId = req.userId;
+        SetupModel.findOne({adminId: adminId}).then( documents => {
+            res.status(200).json({
+                data:{
+                    position: documents.optionPost[0].position,
+                    options:documents.optionPost[0].options,
+                },
+                statusCode: 200
+            });
+        }).catch( err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+            next(err);
+        })
     }
 }

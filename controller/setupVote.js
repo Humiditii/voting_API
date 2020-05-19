@@ -1,6 +1,8 @@
 import SetupModel from '../models/setupVote';
 import PinModel from '../models/pin';
 import { randomBytes } from 'crypto'
+import Catch from '../middleware/catchBlock';
+import { isNullOrUndefined } from 'util';
 
 export class GetSetupVote {
     constructor(){
@@ -8,9 +10,53 @@ export class GetSetupVote {
     }
 
     getFirstPage(req, res, next){
-        return res.status(200).json({
-            message: 'Welcome set up votes'
-        });
+        const {userId} = req;
+
+        console.log(userId)
+
+        SetupModel.find({adminId: userId}).then( result => {
+            PinModel.find({adminId : userId}).then( pinResult => {
+                return res.status(200).json({
+                    data: {
+                        pin: pinResult,
+                        setup: result
+                    }
+                })
+            }).catch( err => {
+                if(!err.statusCode){
+                    err.statusCode = 500;
+                }
+            })
+        }).catch( err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+        })
+
+        // SetupModel.find({adminId : userId}).then( result => {
+        //     const summary = result.optionPost;
+        //     const length = summary.length;
+        //     PinModel.find({adminId : userId}).then( result => { 
+        //         const pinLength = result.voter_pin;
+        //         const dashboardData = {
+        //             votesNum: length,
+        //             activeVotes: summary,
+        //             pinNum: pinLength.length 
+        //         }
+        //         return res.status(200).json({
+        //             data: dashboardData
+        //         })
+        //     }).catch( err=>{
+        //         if(!err.statusCode){
+                    
+        //             err.statusCode = 500;
+        //         }
+        //     });
+        // }).catch( err=> {
+        //     if(!err.statusCode){
+        //         err.statusCode = 500;
+        //     }
+        // })
     }
 }
 
@@ -27,7 +73,8 @@ export class PostVoteSetup {
    async postVote(req, res, next){
         let VoteSetObject = {
             position: req.body.position,
-            options: req. body.options
+            options: req. body.options,
+            votename: req.body.votename
         }
 
         
@@ -38,8 +85,8 @@ export class PostVoteSetup {
             voteCounts.push(0)
             
         }
-        VoteSetObject.options =[ [...Candidates],
-                                 [ ...voteCounts]]
+        VoteSetObject.options =[ {...Candidates},
+                                { ...voteCounts} ]
         
     }
 
@@ -49,7 +96,8 @@ export class PostVoteSetup {
 
     const newPost = {
         position: VoteSetObject.position,
-        options: VoteSetObject.options
+        options: VoteSetObject.options,
+        vote_name: VoteSetObject.votename
     }
 
     
@@ -78,6 +126,7 @@ export class PostVoteSetup {
                 err.statusCode = 500;
             }
             next(err)
+           
         })
         
     }else{
@@ -97,10 +146,11 @@ export class PostVoteSetup {
                 data: result
             })
         }).catch( err => {
-            if(!err.statusCode){
-                err.statusCode = 500;
-            }
-            next(err);
+            // if(!err.statusCode){
+            //     err.statusCode = 500;
+            // }
+            // next(err);
+            Catch( err, next)
         })
 
     }
@@ -241,9 +291,34 @@ export class EditVoteModel {
     }
 
     editVote( req, res, next){
+
+        const editObject = {
+            option: req.body.option,
+            position: req.body.position 
+        }
+
         const reqAdminId = req.userId;
-        SetupModel.findOne({adminId: reqAdminId}).then( result =>{
+        SetupModel.findOne({adminId: reqAdminId}).then( result =>{   
+            // dbPosition = result.optionPost[0].position;
+            // dbOption = result.optionPost[0].options;
             
+            const { option, position } = editObject;
+            result.optionPost[0].position = position;
+            result.optionPost[0].options = option;
+
+            result.save().then( editedSaveDocument => {
+                return res.status(201).json({
+                    data: editedSaveDocument
+                })
+            }).catch( err => {
+                if(!err.statusCode){
+                    err.statusCode = 500
+                }
+                next(err);
+            })
+            // console.log(editObject)
+            // console.log( result.optionPost[0].options, result.optionPost[0].position )
+
         }).catch( err => {
             if(!err.statusCode){
                 err.statusCode = 500;

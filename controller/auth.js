@@ -82,7 +82,8 @@ export class Signin {
             if ( findUserWithEmail ) {
                 return bcrypt.compare(loginDetails.password, findUserWithEmail.password ).then( authUserConfirmed => {
                     if(!authUserConfirmed ){
-                        return res.status(400).json({
+                        return res.json({
+                            statusCode: 400,
                             message: 'Password not correct, please verify and try again on Email'
                         })
                     }else{
@@ -108,7 +109,8 @@ export class Signin {
             }else if(findUserWithUsername) {
                 return bcrypt.compare(loginDetails.password, findUserWithUsername.password ).then( authUserConfirmed => {
                     if(!authUserConfirmed ){
-                        return res.status(400).json({
+                        return res.json({
+                            statusCode: 400,    
                             message: 'Password not correct, please verify and try again  on Username'
                         })
                     }else{
@@ -121,7 +123,7 @@ export class Signin {
                                 Message: findUserWithUsername.username +" "+ "logged in",
                                 token: token,
                                 userId: findUserWithUsername._id.toString(),
-                                userRole: findUserWithUsername.role
+                                //userRole: findUserWithUsername.role
                             }
                         );
                     }
@@ -132,7 +134,7 @@ export class Signin {
                     next(err);
                 })
             }else{
-                return res.status(404).json({
+                return res.status(200).json({
                     message: 'User not found'
                 })
             }

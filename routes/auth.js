@@ -4,16 +4,12 @@ const router = express.Router();
 import { GetHomePage,postSignUp,Signin} from '../controller/auth.js';
 
 
-const pg = new GetHomePage;
-const signUp = new postSignUp;
-const sn = new Signin;
 
+router.get('/', new GetHomePage().getHomepage);
 
-router.get('/', pg.getHomepage);
+router.post('/signup',new postSignUp().verify);
 
-router.post('/signup',signUp.verify);
+router.post('/login', new Signin().login)
 
-router.post('/login', sn.login)
-
-export default router ;
+export default router;
 
