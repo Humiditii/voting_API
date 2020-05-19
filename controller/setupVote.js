@@ -10,9 +10,53 @@ export class GetSetupVote {
     }
 
     getFirstPage(req, res, next){
-        return res.status(200).json({
-            message: 'Welcome set up votes'
-        });
+        const {userId} = req;
+
+        console.log(userId)
+
+        SetupModel.find({adminId: userId}).then( result => {
+            PinModel.find({adminId : userId}).then( pinResult => {
+                return res.status(200).json({
+                    data: {
+                        pin: pinResult,
+                        setup: result
+                    }
+                })
+            }).catch( err => {
+                if(!err.statusCode){
+                    err.statusCode = 500;
+                }
+            })
+        }).catch( err => {
+            if(!err.statusCode){
+                err.statusCode = 500;
+            }
+        })
+
+        // SetupModel.find({adminId : userId}).then( result => {
+        //     const summary = result.optionPost;
+        //     const length = summary.length;
+        //     PinModel.find({adminId : userId}).then( result => { 
+        //         const pinLength = result.voter_pin;
+        //         const dashboardData = {
+        //             votesNum: length,
+        //             activeVotes: summary,
+        //             pinNum: pinLength.length 
+        //         }
+        //         return res.status(200).json({
+        //             data: dashboardData
+        //         })
+        //     }).catch( err=>{
+        //         if(!err.statusCode){
+                    
+        //             err.statusCode = 500;
+        //         }
+        //     });
+        // }).catch( err=> {
+        //     if(!err.statusCode){
+        //         err.statusCode = 500;
+        //     }
+        // })
     }
 }
 
