@@ -9,7 +9,9 @@ class SetupController {
 
         const {userId, userRole} = req;
 
-        if( userId && userRole ===' Admin'){
+        console.log(userRole)
+
+        if( userId && userRole ==='Admin'){
             /**
              * Blueprint
              * electionName = nammes Election;
@@ -23,49 +25,49 @@ class SetupController {
 
             const checkVoteName = await SetupModel.find({electionName: voteName})
             
-            // try {
+            try {
                 
-            // } catch (error) {
-                
-            // }
+                if(checkVoteName.length >= 1 ){
+                    const err = Object()
+                    err.message = 'Election Name taken';
+                    err.statusCode = 400;
+                    return Util.appError(err, next)
+                }else{
+                        const Election = Object();
 
-            if(checkVoteName){
-                const err = Object()
-                err.message = 'Election Name taken';
-                err.statusCode = 400;
-                return Util.appError(err, next)
-            }else{
-                    const Election = Object();
+                        Election.position = position;
 
-                    Election.position = position;
+                        Election.options = options;
 
-                    Election.options = options;
+                        const countCandidates = []
 
-                    const countCandidates = []
+                        for (const i of options) {
+                            countCandidates.push(0)
+                        }
 
-                    for (const i of options) {
-                        countCandidates.push(0)
-                    }
-
-                    Election.count = countCandidates;
+                        Election.count = countCandidates;
 
 
-                    const newElection = new SetupModel();
-                    
-                    
-                    newElection.adminId = userId;
-                    newElection.electionName = voteName;
-                    newElection.election = Election;
+                        const newElection = new SetupModel();
+                        
+                        
+                        newElection.adminId = userId;
+                        newElection.electionName = voteName;
+                        newElection.election = Election;
 
-                    newElection.save().then( saved => {
-                        return res.status(201).json({
-                            message: 'Election configured successfully',
-                            statusCode: 201
+                        newElection.save().then( saved => {
+                            return res.status(201).json({
+                                data: saved,
+                                message: 'Election configured successfully',
+                                statusCode: 201
+                            })
+                        }).catch( err => {
+                            return Util.appError(err, next);
                         })
-                    }).catch( err => {
-                        return Util.appError(err, next);
-                    })
-                }    
+                    }    
+            } catch (error) {
+                return Util.appError(error, next)
+            }
         }else{
             const Err = Object();
             Err.message = 'Not an Admin';
@@ -82,9 +84,21 @@ class SetupController {
         const escavate = await SetupModel.find({adminId: userId});
 
         try {
+
+            if(escavate.length == 0){
+                return res.status(404).json({
+                    message: 'No Election Found',
+                    statusCode: 404
+                });
+            }else{
+                return res.status(200).json({
+                    data: escavate,
+                    statusCode: 200
+                })
+            }
             
         } catch (error) {
-            
+            return Util.appError(error,next)
         }
     }
 }
