@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
 import {AuthModel} from '../models/auth';
-import { Validate } from '../middleware/checker';
 import jwt from 'jsonwebtoken';
 
 export class postSignUp {
@@ -68,7 +67,7 @@ export class Signin {
     }
 
     login(req, res, next){
-        const loginDetails = {
+        const loginDetails = { 
             //<<<-----User can sign in with Email or username-------->>>
             username: req.body.username,
             password: req.body.password
