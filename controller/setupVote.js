@@ -101,6 +101,12 @@ class SetupController {
             return Util.appError(error,next)
         }
     }
+
+
+    static electionResult(req, res, next){
+        const {userId, userRole} = req;
+
+    }
 }
 
 // export class GetSetupVote {
