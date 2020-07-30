@@ -9,22 +9,32 @@ const setupVoteMOdel = new Schema({
         ref: 'auth',
         required: true
     },
+
+    electionName: {
+        type: String,
+        required: true
+    },
+
+    election: {
+        required: true,
+        type: Object
+    },
     
-    optionPost: [
-            {   vote_name:{
-                type: String,
-                required: true
-            } ,
-                position: {
-                    type: String, 
-                    required: true
-                }, 
-                options: {
-                    type: Object,        
-                    required: true
-                }
-            } 
-        ]
+    // optionPost: [
+    //         {   vote_name:{
+    //             type: String,
+    //             required: true
+    //         } ,
+    //             position: {
+    //                 type: String, 
+    //                 required: true
+    //             }, 
+    //             options: {
+    //                 type: Object,        
+    //                 required: true
+    //             }
+    //         } 
+    //     ]
 });
 
 export default mongoose.model('VoteSetup', setupVoteMOdel);
